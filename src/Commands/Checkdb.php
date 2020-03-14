@@ -23,13 +23,6 @@ class Checkdb extends Command
     protected $description = 'Check if all ecoflow tables are created';
 
     /**
-     * List of errors
-     *
-     * @var array
-     */
-    protected array $errors = [];
-
-    /**
      * All packages installed
      * 
      * @var array
@@ -44,18 +37,18 @@ class Checkdb extends Command
     protected array $flowpackages = [];
 
     /**
-     * List of all tables of the EcoFlow ecosystem
+     * Tables found in ecoflow migrations files (will test against it)
      *
-     * @var mixed
+     * @var array
      */
-    protected $db = null;
+    protected array $tablesInMigration = [];
 
     /**
-     * List of DB tables path
+     * List of errors
      *
-     * @var string
+     * @var array
      */
-    protected $db_path = __DIR__ . '/../db.json';
+    protected array $errors = [];
 
     /**
      * Create a new command instance.
@@ -65,20 +58,28 @@ class Checkdb extends Command
     public function __construct()
     {
         parent::__construct();
-        try {
-            $file = File::get($this->db_path);
-            $this->db = json_decode($file);
-            $this->db = $this->db->tables;
-        } catch (\Exception $e) {
-            die("db file empty ! Please create a db.json file \n");
-        }
 
+        // get all packages installed
         $this->packages = $this->getInstalledPackages();
+        // get package names only for ecoflow pkgs
         $this->flowpackages = $this->getPackageName($this->getFlowPackages($this->packages));
 
         // if no Ecoflow package is installed
         if (!count($this->flowpackages)) {
             return $this->error("\n We can't find any ecoflow package");
+        }
+
+        foreach ($this->flowpackages as $pack) {
+            $file = "." . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "ecoflow" . DIRECTORY_SEPARATOR . "$pack" . DIRECTORY_SEPARATOR . "src" . DIRECTORY_SEPARATOR . "Database" . DIRECTORY_SEPARATOR . "migrations";
+
+            if (file_exists($file)) {
+                $migrations = scandir($file);
+                foreach ($migrations as $mig) {
+                    if (preg_match('/create_(\w*)_table/', $mig, $matches)) {
+                        array_push($this->tablesInMigration, [$pack, $matches[1]]);
+                    }
+                }
+            }
         }
     }
 
@@ -89,11 +90,8 @@ class Checkdb extends Command
      */
     public function handle()
     {
-        $tables = $this->tables($this->flowpackages);
-        if (count($tables)) {
-            $this->errors = $this->checkTablesIfExists($tables);
-            $this->display();
-        }
+        $this->errors = $this->checkTablesIfExists($this->tablesInMigration);
+        $this->display();
     }
 
     /**
@@ -138,23 +136,6 @@ class Checkdb extends Command
     }
 
     /**
-     * Get tables list of installed packages
-     *
-     * @param array $packages
-     * @return array
-     */
-    protected function tables(array $packages): array
-    {
-        $tables = [];
-        for ($i = 1; $i <= count($packages); $i++) {
-            if (isset($this->db->{$packages[$i]})) {
-                $tables[$packages[$i]] = [$packages[$i], $this->db->{$packages[$i]}];
-            }
-        }
-        return $tables;
-    }
-
-    /**
      * Check if table exists in DB
      *
      * @param array $tables
@@ -164,10 +145,8 @@ class Checkdb extends Command
     {
         $errors = [];
 
-        foreach ($tables as $packages) {
-            foreach ($packages[1] as $table) {
-                Schema::hasTable($table) ? '' : array_push($errors, [$packages[0], $table]);
-            }
+        foreach ($tables as $table) {
+            Schema::hasTable($table[1]) ? '' : array_push($errors, [$table[0], $table[1]]);
         }
         return $errors;
     }
