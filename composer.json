@@ -1,0 +1,26 @@
+{
+  "name": "ecoflow/core",
+  "version": "0.0.2",
+  "description": "Ecoflow core basic",
+  "type": "package",
+  "authors": [
+    {
+      "name": "jrb",
+      "email": "jrb.youssef@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "Ecoflow\\Core\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Ecoflow\\Core\\CoreServiceProvider"
+      ]
+    }
+  }
+}

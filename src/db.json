@@ -1,0 +1,20 @@
+{
+  "tables": {
+    "shop": [
+      "shops",
+      "categories",
+      "products",
+      "product_shop",
+      "category_product",
+      "currencies"
+    ],
+    "contact": [
+      "phones",
+      "emails",
+      "addresses"
+    ],
+    "media": [
+      "images"
+    ]
+  }
+}
