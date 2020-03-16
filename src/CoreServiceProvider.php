@@ -6,7 +6,10 @@ use Illuminate\Support\ServiceProvider;
 
 class CoreServiceProvider extends ServiceProvider
 {
-    protected $commandsArray = [Commands\Checkdb::class];
+    protected $commandsArray = [
+        Commands\Checkdb::class,
+        Commands\Seed::class
+    ];
 
     public function register()
     {
