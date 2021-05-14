@@ -1,0 +1,60 @@
+<?php
+
+namespace @namespace@\Controllers\@class_s_uc@;
+
+use @namespace@\Models\@class_s_uc@;
+use App\Http\Controllers\Controller;
+
+class @class_s_uc@Controller extends Controller
+{
+
+    /**
+     * __construct
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        // code
+    }
+
+    /**
+     * Return all records
+     *
+     */
+    public function index()
+    {
+        return @class_s_uc@::all();
+    }
+
+    /**
+     * Show a record
+     *
+     */
+    public function show($id): @class_s_uc@
+    {
+        return @class_s_uc@::find($id);
+    }
+
+    /**
+     * create
+     *
+     * @param array $attributes
+     * @return @class_s_uc@
+     */
+    public function create(array $attributes): @class_s_uc@
+    {
+        return @class_s_uc@::create($attributes);
+    }
+
+    /**
+     * delete
+     *
+     * @param string $id
+     * @return bool
+     */
+    public function delete(string $id): bool
+    {
+        return @class_s_uc@::delete($id);
+    }
+}

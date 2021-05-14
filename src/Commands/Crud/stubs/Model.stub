@@ -1,0 +1,15 @@
+<?php
+
+namespace Ecoflow\@package_s_uc@\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class @class_s_uc@ extends Model
+{
+    /**
+     * $fillable
+     *
+     * @var array
+     */
+    protected $fillable = @fillables@;
+}

@@ -1,0 +1,14 @@
+<?php
+
+namespace @namepsace@\Repositories;
+
+use @namepsace@\Models\@class_uc@;
+use Ecoflow\Core\Repositories\BaseRepository;
+
+class @class_uc@Repository extends BaseRepository
+{
+    public function __construct()
+    {
+        parent::__construct(new @class_uc@());
+    }
+}
