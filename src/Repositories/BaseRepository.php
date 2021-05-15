@@ -62,13 +62,13 @@ class BaseRepository
     }
 
     /**
-     * update
+     * modify
      *
-     * @param string $id
+     * @param integer $id
      * @param array $data
      * @return void
      */
-    public function update(string $id, array $data): bool
+    public function modify(string $id, array $data): bool
     {
         return $this->model->find($id)->update($data);
     }
