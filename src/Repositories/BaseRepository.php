@@ -2,11 +2,11 @@
 
 namespace Ecoflow\Core\Repositories;
 
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class BaseRepository
 {
-
     /**
      * $model
      *
@@ -58,7 +58,8 @@ class BaseRepository
      */
     public function create(array $data): Model
     {
-        return $this->model->create($data);
+        $created = $this->model->create($data)->refresh();
+        return $created;
     }
 
     /**
@@ -87,7 +88,7 @@ class BaseRepository
     /**
      * Helper function: if a collection has only 1 element we return the first
      *
-     * @param collection $collection
+     * @param Collection $collection
      * @return mix
      */
     private function singularize($collection)
